@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
     LayoutDashboard,
     Receipt,
     Settings,
-    Menu,
-    X,
     LogOut,
     Wallet
 } from 'lucide-react';
@@ -18,23 +16,17 @@ const navItems = [
     { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
-const Sidebar: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+interface SidebarProps {
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+}
 
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     const toggleSidebar = () => setIsOpen(!isOpen);
 
     return (
         <>
-            {/* Mobile Toggle Button - Moved to Header but keeping logic here for now or passing it */}
-            {/* Keeping it fixed but making it more subtle */}
-            <Button
-                variant="ghost"
-                size="sm"
-                className="fixed top-3 left-4 z-50 md:hidden bg-white/50 backdrop-blur-sm border border-slate-200 shadow-sm"
-                onClick={toggleSidebar}
-            >
-                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+            {/* Mobile Toggle Button - Moved to Header */}
 
             {/* Backdrop for mobile */}
             {isOpen && (

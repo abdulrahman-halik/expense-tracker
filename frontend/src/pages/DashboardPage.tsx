@@ -11,22 +11,40 @@ import expenseService from '../services/expenseService';
 import type { DashboardStats } from '../types/expense';
 import { toast } from 'react-hot-toast';
 
-const StatCard = ({ title, amount, icon: Icon, color, trend }: any) => (
-    <Card className="flex flex-col p-6">
-        <div className="flex items-center justify-between mb-4">
-            <div className={`p-2 rounded-lg bg-${color}-100 text-${color}-600 dark:bg-${color}-900/30 dark:text-${color}-400`}>
-                <Icon size={24} />
+import type { TransactionFormData } from '../components/expenses/TransactionForm';
+
+interface StatCardProps {
+    title: string;
+    amount: number;
+    icon: React.ElementType;
+    color: 'blue' | 'green' | 'red';
+    trend?: number;
+}
+
+const StatCard = ({ title, amount, icon: Icon, color, trend }: StatCardProps) => {
+    const colorClasses = {
+        blue: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+        green: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
+        red: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',
+    };
+
+    return (
+        <Card className="flex flex-col p-6">
+            <div className="flex items-center justify-between mb-4">
+                <div className={`p-2 rounded-lg ${colorClasses[color]}`}>
+                    <Icon size={24} />
+                </div>
+                {trend && (
+                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${trend > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                        {trend > 0 ? '+' : ''}{trend}%
+                    </span>
+                )}
             </div>
-            {trend && (
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${trend > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                    {trend > 0 ? '+' : ''}{trend}%
-                </span>
-            )}
-        </div>
-        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
-        <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
-    </Card>
-);
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
+            <h3 className="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</h3>
+        </Card>
+    );
+};
 
 const DashboardPage = () => {
     const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -50,7 +68,7 @@ const DashboardPage = () => {
         fetchStats();
     }, []);
 
-    const handleAddTransaction = async (data: any) => {
+    const handleAddTransaction = async (data: TransactionFormData) => {
         try {
             await expenseService.addExpense(data);
             setIsModalOpen(false);

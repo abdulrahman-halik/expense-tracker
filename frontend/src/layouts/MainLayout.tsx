@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '../components/layout/Sidebar';
 import { Header } from '../components/layout/Header';
@@ -16,12 +16,17 @@ const MainLayout: React.FC = () => {
         }
     };
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            <Sidebar />
-            <div className="flex-1 md:ml-64 flex flex-col">
-                <Header title={getPageTitle(location.pathname)} />
-                <main className="p-6 md:p-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+            <div className="flex-1 md:ml-64 flex flex-col min-w-0">
+                <Header
+                    title={getPageTitle(location.pathname)}
+                    onMenuClick={() => setIsSidebarOpen(true)}
+                />
+                <main className="p-4 sm:p-6 md:p-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <Outlet />
                 </main>
             </div>

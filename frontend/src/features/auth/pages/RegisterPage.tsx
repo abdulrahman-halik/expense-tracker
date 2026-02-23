@@ -43,8 +43,13 @@ export const RegisterPage: React.FC = () => {
             const response = await authService.register(data);
             login(response.token, response.user);
             navigate('/');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to register. Please try again.');
+        } catch (err: unknown) {
+            let message = 'Failed to register. Please try again.';
+            if (err && typeof err === 'object' && 'response' in err) {
+                const axiosError = err as { response?: { data?: { message?: string } } };
+                message = axiosError.response?.data?.message || message;
+            }
+            setError(message);
         } finally {
             setIsSubmitting(false);
         }

@@ -38,8 +38,13 @@ export const LoginPage: React.FC = () => {
             const response = await authService.login(data);
             login(response.token, response.user);
             navigate('/');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to login. Please check your credentials.');
+        } catch (err: unknown) {
+            let message = 'Failed to login. Please check your credentials.';
+            if (err && typeof err === 'object' && 'response' in err) {
+                const axiosError = err as { response?: { data?: { message?: string } } };
+                message = axiosError.response?.data?.message || message;
+            }
+            setError(message);
         } finally {
             setIsSubmitting(false);
         }
