@@ -3,12 +3,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import type { Transaction, Category } from '../../types/expense';
+import type { Transaction } from '../../types/expense';
+
+const CATEGORIES = [
+    'Food', 'Transport', 'Rent', 'Salary', 'Utilities',
+    'Entertainment', 'Shopping', 'Health', 'Education', 'Other'
+] as const;
 
 const transactionSchema = z.object({
     title: z.string().min(3, 'Title must be at least 3 characters').max(50, 'Title must be less than 50 characters'),
     amount: z.number().positive('Amount must be greater than 0'),
-    category: z.string().min(1, 'Category is required'),
+    category: z.enum(CATEGORIES, {
+        message: 'Category is required'
+    }),
     date: z.string().min(1, 'Date is required'),
     type: z.enum(['income', 'expense']),
     note: z.string().optional(),
@@ -23,10 +30,7 @@ interface TransactionFormProps {
     isLoading?: boolean;
 }
 
-const CATEGORIES: Category[] = [
-    'Food', 'Transport', 'Rent', 'Salary', 'Utilities',
-    'Entertainment', 'Shopping', 'Health', 'Education', 'Other'
-];
+// CATEGORIES is now defined above to be used in schema
 
 export const TransactionForm = ({ initialData, onSubmit, onCancel, isLoading }: TransactionFormProps) => {
     const {
@@ -47,7 +51,7 @@ export const TransactionForm = ({ initialData, onSubmit, onCancel, isLoading }: 
             date: new Date().toISOString().split('T')[0],
             title: '',
             amount: 0,
-            category: '',
+            category: 'Other' as typeof CATEGORIES[number], // Use default valid category
             note: '',
         },
     });
