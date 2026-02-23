@@ -4,6 +4,12 @@ export interface ExpenseFilters {
     category?: string;
     startDate?: Date;
     endDate?: Date;
+    // Pagination
+    page?: number;
+    limit?: number;
+    // Sorting
+    sortBy?: 'date' | 'amount';
+    sortOrder?: 'asc' | 'desc';
 }
 
 export interface ExpenseData {
@@ -12,6 +18,13 @@ export interface ExpenseData {
     category: string;
     date?: Date;
     description?: string;
+}
+
+export interface PaginatedExpenses {
+    data: IExpense[];
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
 }
 
 /**
@@ -32,15 +45,16 @@ export const createExpense = async (
 };
 
 /**
- * Get all expenses for a specific user, with optional filtering.
- * Results sorted by date descending (newest first).
+ * Get all expenses for a specific user, with optional filtering,
+ * sorting, and pagination.
  */
 export const getExpensesByUser = async (
     userId: string,
     filters: ExpenseFilters = {}
-): Promise<IExpense[]> => {
+): Promise<PaginatedExpenses> => {
     const query: Record<string, unknown> = { user: userId };
 
+    // --- Filtering ---
     if (filters.category) {
         query.category = filters.category;
     }
@@ -52,7 +66,27 @@ export const getExpensesByUser = async (
         query.date = dateFilter;
     }
 
-    return Expense.find(query).sort({ date: -1 });
+    // --- Sorting ---
+    const sortField = filters.sortBy ?? 'date';
+    const sortDirection = filters.sortOrder === 'asc' ? 1 : -1;
+    const sortQuery: Record<string, 1 | -1> = { [sortField]: sortDirection };
+
+    // --- Pagination ---
+    const page = Math.max(1, filters.page ?? 1);
+    const limit = Math.min(100, Math.max(1, filters.limit ?? 10));
+    const skip = (page - 1) * limit;
+
+    const [data, totalItems] = await Promise.all([
+        Expense.find(query).sort(sortQuery).skip(skip).limit(limit),
+        Expense.countDocuments(query),
+    ]);
+
+    return {
+        data,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+    };
 };
 
 /**
