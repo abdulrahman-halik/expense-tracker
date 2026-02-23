@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
-import { protect, AuthRequest } from './middleware/authMiddleware';
+import expenseRoutes from './routes/expenseRoutes';
 
 
 dotenv.config();
@@ -26,13 +26,8 @@ app.get('/', (_req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 
 
-app.get('/api/protected', protect, (req: AuthRequest, res: Response) => {
-    res.json({
-        success: true,
-        message: 'You are authenticated!',
-        user: req.user,
-    });
-});
+// Expense routes: /api/expenses
+app.use('/api/expenses', expenseRoutes);
 
 // Server
 const PORT = process.env.PORT || 5000;
