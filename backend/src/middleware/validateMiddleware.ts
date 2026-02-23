@@ -1,11 +1,6 @@
 import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
-/**
- * Generic validation middleware factory.
- * Validates req.body against the provided Joi schema.
- * Returns 400 with the first validation error message if invalid.
- */
 export const validate =
     (schema: Joi.ObjectSchema) =>
         (req: Request, res: Response, next: NextFunction): void => {
@@ -17,9 +12,8 @@ export const validate =
             next();
         };
 
-// ---------------------------------------------------------------------------
+
 // Expense Joi Schemas
-// ---------------------------------------------------------------------------
 
 const VALID_CATEGORIES = [
     'Food',

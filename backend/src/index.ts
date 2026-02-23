@@ -28,15 +28,15 @@ app.use('/api/auth', authRoutes);
 // Expense routes: /api/expenses
 app.use('/api/expenses', expenseRoutes);
 
-// 404 handler – catches unmatched routes
+
 app.use((_req: Request, res: Response) => {
     res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// Centralised error handler (must be last)
+
 app.use(errorHandler);
 
-// Server
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

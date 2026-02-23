@@ -4,10 +4,8 @@ export interface ExpenseFilters {
     category?: string;
     startDate?: Date;
     endDate?: Date;
-    // Pagination
     page?: number;
     limit?: number;
-    // Sorting
     sortBy?: 'date' | 'amount';
     sortOrder?: 'asc' | 'desc';
 }
@@ -44,10 +42,7 @@ export const createExpense = async (
     });
 };
 
-/**
- * Get all expenses for a specific user, with optional filtering,
- * sorting, and pagination.
- */
+
 export const getExpensesByUser = async (
     userId: string,
     filters: ExpenseFilters = {}
@@ -66,12 +61,10 @@ export const getExpensesByUser = async (
         query.date = dateFilter;
     }
 
-    // --- Sorting ---
     const sortField = filters.sortBy ?? 'date';
     const sortDirection = filters.sortOrder === 'asc' ? 1 : -1;
     const sortQuery: Record<string, 1 | -1> = { [sortField]: sortDirection };
 
-    // --- Pagination ---
     const page = Math.max(1, filters.page ?? 1);
     const limit = Math.min(100, Math.max(1, filters.limit ?? 10));
     const skip = (page - 1) * limit;
@@ -89,16 +82,11 @@ export const getExpensesByUser = async (
     };
 };
 
-/**
- * Get a single expense by its ID (does not check ownership here).
- */
 export const getExpenseById = async (id: string): Promise<IExpense | null> => {
     return Expense.findById(id);
 };
 
-/**
- * Update an expense by ID and return the updated document.
- */
+
 export const updateExpenseById = async (
     id: string,
     data: Partial<ExpenseData>

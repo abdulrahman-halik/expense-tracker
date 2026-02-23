@@ -10,19 +10,7 @@ import {
     ExpenseFilters,
 } from '../services/expenseService';
 
-/**
- * GET /api/expenses
- * Return paginated + filtered + sorted expenses for the authenticated user.
- *
- * Query params:
- *   category   – filter by category
- *   startDate  – filter expenses on/after this date (ISO)
- *   endDate    – filter expenses on/before this date (ISO)
- *   page       – page number (default 1)
- *   limit      – items per page (default 10, max 100)
- *   sortBy     – 'date' | 'amount' (default 'date')
- *   sortOrder  – 'asc' | 'desc' (default 'desc')
- */
+
 export const getExpenses = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.user!.id;
 
@@ -51,10 +39,7 @@ export const getExpenses = async (req: AuthRequest, res: Response, next: NextFun
     });
 };
 
-/**
- * POST /api/expenses
- * Create a new expense for the authenticated user.
- */
+
 export const createExpenseHandler = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.user!.id;
     const { title, amount, category, date, description } = req.body;
@@ -74,10 +59,7 @@ export const createExpenseHandler = async (req: AuthRequest, res: Response, next
     });
 };
 
-/**
- * PUT /api/expenses/:id
- * Update an expense. Only the owner may update their own expense.
- */
+
 export const updateExpenseHandler = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.user!.id;
     const id = req.params.id as string;
@@ -108,10 +90,6 @@ export const updateExpenseHandler = async (req: AuthRequest, res: Response, next
     });
 };
 
-/**
- * DELETE /api/expenses/:id
- * Delete an expense. Only the owner may delete their own expense.
- */
 export const deleteExpenseHandler = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.user!.id;
     const id = req.params.id as string;

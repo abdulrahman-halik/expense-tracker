@@ -11,7 +11,6 @@ const UserSchema: Schema = new Schema(
     {
         name: { type: String, required: true, trim: true },
         email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-        // select: false keeps password out of normal queries – must be explicitly selected
         password: { type: String, required: true, select: false },
     },
     { timestamps: true }
