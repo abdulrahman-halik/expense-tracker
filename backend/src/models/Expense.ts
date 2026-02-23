@@ -20,7 +20,16 @@ const ExpenseSchema: Schema = new Schema({
     note: { type: String },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: function (doc, ret: Record<string, any>) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+        }
+    },
+    toObject: { virtuals: true }
 });
 
 export default mongoose.model<IExpense>('Expense', ExpenseSchema);

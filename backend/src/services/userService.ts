@@ -20,3 +20,14 @@ export const createUser = async (
     });
     return user;
 };
+
+export const updateUserById = async (
+    id: string,
+    updates: { name?: string; email?: string }
+): Promise<IUser | null> => {
+    const updateData: any = {};
+    if (updates.name) updateData.name = updates.name.trim();
+    if (updates.email) updateData.email = updates.email.toLowerCase().trim();
+
+    return User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true }).select('-password');
+};

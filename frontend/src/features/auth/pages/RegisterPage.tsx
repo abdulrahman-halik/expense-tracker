@@ -40,7 +40,8 @@ export const RegisterPage: React.FC = () => {
         setIsSubmitting(true);
         setError(null);
         try {
-            const response = await authService.register(data);
+            const { confirmPassword, ...registerData } = data;
+            const response = await authService.register(registerData);
             login(response.token, response.user);
             navigate('/');
         } catch (err: unknown) {

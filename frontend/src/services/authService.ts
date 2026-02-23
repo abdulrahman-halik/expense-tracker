@@ -1,5 +1,5 @@
 import api from './api';
-import type { LoginData, RegisterData, AuthResponse, User } from '../types/auth';
+import type { LoginData, RegisterData, AuthResponse, User, UpdateProfileData } from '../types/auth';
 
 export const authService = {
     login: async (data: LoginData): Promise<AuthResponse> => {
@@ -13,7 +13,12 @@ export const authService = {
     },
 
     getMe: async (): Promise<User> => {
-        const response = await api.get<User>('/auth/me');
+        const response = await api.get<{ success: boolean; user: User }>('/auth/me');
+        return response.data.user;
+    },
+
+    updateProfile: async (data: UpdateProfileData): Promise<{ success: boolean; message: string; user: User }> => {
+        const response = await api.put<{ success: boolean; message: string; user: User }>('/auth/profile', data);
         return response.data;
     },
 };

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { protect } from '../middleware/authMiddleware';
 import { validate, createExpenseSchema, updateExpenseSchema } from '../middleware/validateMiddleware';
 import {
     getExpenses,
@@ -11,7 +10,6 @@ import {
 
 const router = Router();
 
-router.use(protect);
 
 // GET    /api/expenses/stats   (must come before /:id)
 router.get('/stats', getStatsHandler);

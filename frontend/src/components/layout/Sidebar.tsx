@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { Button } from '../ui/Button';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -22,6 +23,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+    const { logout } = useAuth();
     const toggleSidebar = () => setIsOpen(!isOpen);
 
     return (
@@ -72,7 +74,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 </div>
 
                 <div className="mt-auto p-6 border-t border-gray-100">
-                    <Button variant="ghost" className="w-full justify-start text-gray-500 hover:text-red-600 hover:bg-red-50 gap-3">
+                    <Button
+                        variant="ghost"
+                        onClick={logout}
+                        className="w-full justify-start text-gray-500 hover:text-red-600 hover:bg-red-50 gap-3"
+                    >
                         <LogOut className="h-5 w-5" />
                         Logout
                     </Button>

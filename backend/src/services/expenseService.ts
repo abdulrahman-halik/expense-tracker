@@ -33,15 +33,15 @@ export interface PaginatedExpenses {
  */
 export const createExpense = async (
     userId: string,
-    data: ExpenseData
+    { title, amount, category, type='expense', date, note }: ExpenseData
 ): Promise<IExpense> => {
     return Expense.create({
-        title: data.title.trim(),
-        amount: data.amount,
-        category: data.category.trim(),
-        type: data.type,
-        date: data.date ?? new Date(),
-        note: data.note?.trim(),
+        title: title.trim(),
+        amount: amount,
+        category: category.trim(),
+        type: type,
+        date: date ?? new Date(),
+        note: note?.trim(),
         user: userId,
     });
 };

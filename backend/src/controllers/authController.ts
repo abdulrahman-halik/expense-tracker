@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
-import { createUser, findUserByEmail } from "../services/userService";
+import { createUser, findUserByEmail, updateUserById } from "../services/userService";
 import { AuthRequest } from "../middleware/authMiddleware";
 
 const registerSchema = Joi.object({
@@ -15,6 +15,11 @@ const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
+
+const updateProfileSchema = Joi.object({
+  name: Joi.string().min(2).max(50).optional(),
+  email: Joi.string().email().optional(),
+}).min(1);
 
 const generateToken = (userId: string): string => {
   const secret = process.env.JWT_SECRET;
@@ -119,10 +124,50 @@ export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
   }
   res.status(200).json({
     success: true,
+    user
+  });
+};
+
+/**
+ * PUT /api/auth/profile
+ * Update the currently authenticated user's profile.
+ */
+export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
+  const { error, value } = updateProfileSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({ success: false, message: error.details[0].message });
+    return;
+  }
+
+  const user = req.user;
+  if (!user) {
+    res.status(401).json({ success: false, message: 'Not authorised' });
+    return;
+  }
+
+  // If email is being updated, check if it's already in use
+  if (value.email && value.email !== user.email) {
+    const existingUser = await findUserByEmail(value.email);
+    if (existingUser) {
+      res.status(409).json({ success: false, message: 'Email is already registered by another user' });
+      return;
+    }
+  }
+
+  const updatedUser = await updateUserById(user.id, value);
+
+  if (!updatedUser) {
+    res.status(404).json({ success: false, message: 'User not found' });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Profile updated successfully',
     user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
+      id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
     },
   });
 };

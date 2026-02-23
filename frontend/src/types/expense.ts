@@ -14,6 +14,7 @@ export type Category =
 
 export interface Transaction {
     id: string;
+    _id?: string;
     title: string;
     amount: number;
     category: Category;

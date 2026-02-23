@@ -48,16 +48,8 @@ export const getExpenses = async (req: AuthRequest, res: Response, next: NextFun
 export const createExpenseHandler = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const userId = req.user!.id;
-        const { title, amount, category, type, date, note } = req.body;
 
-        const expense = await createExpense(userId, {
-            title,
-            amount,
-            category,
-            type: type || 'expense',
-            date: date ? new Date(date) : undefined,
-            note,
-        });
+        const expense = await createExpense(userId, req.body);
 
         res.status(201).json({
             success: true,
