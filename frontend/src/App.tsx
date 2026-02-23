@@ -4,8 +4,8 @@ import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { MainLayout } from './layouts/MainLayout';
 import { LoginPage } from './features/auth/pages/LoginPage';
 import { RegisterPage } from './features/auth/pages/RegisterPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { ExpensesPage } from './pages/ExpensesPage';
+import DashboardPage from './pages/DashboardPage';
+import ExpensesPage from './pages/ExpensesPage';
 import { SettingsPage } from './pages/SettingsPage';
 
 function App() {
