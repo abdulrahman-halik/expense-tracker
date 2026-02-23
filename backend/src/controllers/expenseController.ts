@@ -21,6 +21,8 @@ export const getExpenses = async (req: AuthRequest, res: Response, next: NextFun
         if (req.query.type) filters.type = req.query.type as 'income' | 'expense';
         if (req.query.startDate) filters.startDate = new Date(req.query.startDate as string);
         if (req.query.endDate) filters.endDate = new Date(req.query.endDate as string);
+        if (req.query.search) filters.title = req.query.search as string;
+
 
         // Pagination
         if (req.query.page) filters.page = Number(req.query.page);
