@@ -4,10 +4,12 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { CategoryPieChart, SpendingTrendChart } from '../components/analytics/AnalyticsCharts';
 import { ExpenseTable } from '../components/expenses/ExpenseTable';
+import { CardSkeleton, Skeleton } from '../components/ui/Skeleton';
 import { TransactionForm } from '../components/expenses/TransactionForm';
 import { Modal } from '../components/ui/Modal';
 import expenseService from '../services/expenseService';
 import type { DashboardStats } from '../types/expense';
+import { toast } from 'react-hot-toast';
 
 const StatCard = ({ title, amount, icon: Icon, color, trend }: any) => (
     <Card className="flex flex-col p-6">
@@ -38,6 +40,7 @@ const DashboardPage = () => {
             setStats(data);
         } catch (error) {
             console.error('Failed to fetch stats:', error);
+            toast.error('Failed to load dashboard data');
         } finally {
             setIsLoading(false);
         }
@@ -51,16 +54,33 @@ const DashboardPage = () => {
         try {
             await expenseService.addExpense(data);
             setIsModalOpen(false);
+            toast.success('Transaction added');
             fetchStats();
         } catch (error) {
             console.error('Failed to add transaction:', error);
+            toast.error('Failed to add transaction');
         }
     };
 
     if (isLoading && !stats) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="space-y-8 animate-in fade-in duration-500">
+                <div className="h-10 w-48 bg-slate-200 dark:bg-slate-800 animate-pulse rounded mb-2"></div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <CardSkeleton />
+                    <CardSkeleton />
+                    <CardSkeleton />
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="h-64 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-4">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="flex-1 w-full" />
+                    </div>
+                    <div className="h-64 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-4">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="flex-1 w-full" />
+                    </div>
+                </div>
             </div>
         );
     }

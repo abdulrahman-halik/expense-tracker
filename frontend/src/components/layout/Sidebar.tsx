@@ -25,14 +25,15 @@ const Sidebar: React.FC = () => {
 
     return (
         <>
-            {/* Mobile Toggle Button */}
+            {/* Mobile Toggle Button - Moved to Header but keeping logic here for now or passing it */}
+            {/* Keeping it fixed but making it more subtle */}
             <Button
                 variant="ghost"
                 size="sm"
-                className="fixed top-4 left-4 z-50 md:hidden"
+                className="fixed top-3 left-4 z-50 md:hidden bg-white/50 backdrop-blur-sm border border-slate-200 shadow-sm"
                 onClick={toggleSidebar}
             >
-                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
 
             {/* Backdrop for mobile */}

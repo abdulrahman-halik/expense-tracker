@@ -29,6 +29,8 @@ export interface ExpenseFilters {
     type?: TransactionType;
     startDate?: string;
     endDate?: string;
+    sortBy?: 'date' | 'amount' | 'category';
+    sortOrder?: 'asc' | 'desc';
     page?: number;
     limit?: number;
 }
