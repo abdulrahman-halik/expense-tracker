@@ -18,8 +18,11 @@ export const validate =
 const VALID_CATEGORIES = [
     'Food',
     'Transport',
+    'Rent',
+    'Salary',
     'Housing',
     'Healthcare',
+    'Health',
     'Entertainment',
     'Shopping',
     'Education',
@@ -43,8 +46,9 @@ export const createExpenseSchema = Joi.object({
             'any.only': `Category must be one of: ${VALID_CATEGORIES.join(', ')}`,
             'any.required': 'Category is required',
         }),
+    type: Joi.string().valid('income', 'expense').optional().default('expense'),
     date: Joi.date().iso().optional(),
-    description: Joi.string().max(500).optional().allow(''),
+    note: Joi.string().max(500).optional().allow(''),
 });
 
 export const updateExpenseSchema = Joi.object({
@@ -60,6 +64,7 @@ export const updateExpenseSchema = Joi.object({
         .messages({
             'any.only': `Category must be one of: ${VALID_CATEGORIES.join(', ')}`,
         }),
+    type: Joi.string().valid('income', 'expense').optional(),
     date: Joi.date().iso().optional(),
-    description: Joi.string().max(500).optional().allow(''),
-}).min(1); // At least one field must be present on update
+    note: Joi.string().max(500).optional().allow(''),
+}).min(1);

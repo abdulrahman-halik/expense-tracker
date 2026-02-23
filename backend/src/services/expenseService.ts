@@ -2,6 +2,7 @@ import Expense, { IExpense } from '../models/Expense';
 
 export interface ExpenseFilters {
     category?: string;
+    type?: 'income' | 'expense';
     startDate?: Date;
     endDate?: Date;
     page?: number;
@@ -14,15 +15,17 @@ export interface ExpenseData {
     title: string;
     amount: number;
     category: string;
+    type: 'income' | 'expense';
     date?: Date;
-    description?: string;
+    note?: string;
 }
 
 export interface PaginatedExpenses {
     data: IExpense[];
-    totalItems: number;
+    total: number;
     totalPages: number;
-    currentPage: number;
+    page: number;
+    limit: number;
 }
 
 /**
@@ -36,8 +39,9 @@ export const createExpense = async (
         title: data.title.trim(),
         amount: data.amount,
         category: data.category.trim(),
+        type: data.type,
         date: data.date ?? new Date(),
-        description: data.description?.trim(),
+        note: data.note?.trim(),
         user: userId,
     });
 };
@@ -52,6 +56,10 @@ export const getExpensesByUser = async (
     // --- Filtering ---
     if (filters.category) {
         query.category = filters.category;
+    }
+
+    if (filters.type) {
+        query.type = filters.type;
     }
 
     if (filters.startDate || filters.endDate) {
@@ -76,9 +84,10 @@ export const getExpensesByUser = async (
 
     return {
         data,
-        totalItems,
+        total: totalItems,
         totalPages: Math.ceil(totalItems / limit),
-        currentPage: page,
+        page,
+        limit,
     };
 };
 
@@ -95,8 +104,9 @@ export const updateExpenseById = async (
     if (data.title !== undefined) updateFields.title = data.title.trim();
     if (data.amount !== undefined) updateFields.amount = data.amount;
     if (data.category !== undefined) updateFields.category = data.category.trim();
+    if ((data as any).type !== undefined) updateFields.type = (data as any).type;
     if (data.date !== undefined) updateFields.date = data.date;
-    if (data.description !== undefined) updateFields.description = data.description.trim();
+    if (data.note !== undefined) updateFields.note = data.note?.trim();
 
     return Expense.findByIdAndUpdate(id, { $set: updateFields }, { new: true, runValidators: true });
 };

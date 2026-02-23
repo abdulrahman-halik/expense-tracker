@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Joi from "joi";
 import { createUser, findUserByEmail } from "../services/userService";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 const registerSchema = Joi.object({
   name: Joi.string().min(2).max(50).required(),
@@ -44,7 +45,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 
   const salt = await bcrypt.genSalt(12);
-  
+
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const user = await createUser(name, email, hashedPassword);
@@ -100,6 +101,26 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     token,
     user: {
       id: user._id,
+      name: user.name,
+      email: user.email,
+    },
+  });
+};
+
+/**
+ * GET /api/auth/me
+ * Return the currently authenticated user's profile.
+ */
+export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
+  const user = req.user;
+  if (!user) {
+    res.status(401).json({ success: false, message: 'Not authorised' });
+    return;
+  }
+  res.status(200).json({
+    success: true,
+    user: {
+      id: user.id,
       name: user.name,
       email: user.email,
     },
