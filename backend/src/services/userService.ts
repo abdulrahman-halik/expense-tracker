@@ -8,17 +8,12 @@ export const findUserByEmail = async (email: string): Promise<IUser | null> => {
     return User.findOne({ email: email.toLowerCase().trim() }).select('+password');
 };
 
-/**
- * Find a user by their MongoDB ObjectId.
- */
+
 export const findUserById = async (id: string): Promise<IUser | null> => {
     return User.findById(id).select('-password');
 };
 
-/**
- * Create a new user document in the database.
- * Note: password should already be hashed before calling this function.
- */
+
 export const createUser = async (
     name: string,
     email: string,
