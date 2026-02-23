@@ -11,8 +11,7 @@ const connectDB = async () => {
             console.log("Connected to MongoDB");
         });
 
-        // For Atlas URIs with query strings, it's better to include the DB name in the URI directly or pass it in options
-        // Adding it before the query string if possible, or just using the URI as is if it contains the DB name.
+
         await mongoose.connect(uri, {
             dbName: 'expense-tracker'
         });
