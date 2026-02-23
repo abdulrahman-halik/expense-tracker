@@ -11,8 +11,8 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
     const { user, logout } = useAuth();
 
     return (
-        <header className="h-16 border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-6 md:px-8">
-            <h1 className="text-lg font-semibold text-gray-900 pl-10 md:pl-0">{title}</h1>
+        <header className="h-16 border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-4 md:px-8">
+            <h1 className="text-lg font-bold text-gray-900 pl-12 md:pl-0 truncate">{title}</h1>
 
             <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" className="relative p-2">

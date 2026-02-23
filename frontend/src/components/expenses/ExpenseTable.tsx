@@ -2,6 +2,7 @@ import { Edit2, Trash2, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import type { Transaction } from '../../types/expense';
 import { cn } from '../../utils/cn';
+import { TableRowSkeleton } from '../ui/Skeleton';
 
 interface ExpenseTableProps {
     transactions: Transaction[];
@@ -13,17 +14,29 @@ interface ExpenseTableProps {
 export const ExpenseTable = ({ transactions, onEdit, onDelete, isLoading }: ExpenseTableProps) => {
     if (isLoading) {
         return (
-            <div className="w-full h-64 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <div className="w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+                <div className="bg-slate-50 dark:bg-slate-900 px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+                    <div className="h-4 w-32 bg-slate-200 dark:bg-slate-800 animate-pulse rounded"></div>
+                </div>
+                <div className="divide-y divide-slate-100 dark:divide-slate-900">
+                    <TableRowSkeleton columns={5} />
+                    <TableRowSkeleton columns={5} />
+                    <TableRowSkeleton columns={5} />
+                    <TableRowSkeleton columns={5} />
+                    <TableRowSkeleton columns={5} />
+                </div>
             </div>
         );
     }
 
     if (transactions.length === 0) {
         return (
-            <div className="w-full h-64 flex flex-col items-center justify-center text-slate-500">
-                <p className="text-lg font-medium">No transactions found</p>
-                <p className="text-sm">Start by adding your first income or expense.</p>
+            <div className="w-full py-12 flex flex-col items-center justify-center text-slate-500 bg-white dark:bg-slate-950 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                <div className="p-4 rounded-full bg-slate-50 dark:bg-slate-900 mb-4">
+                    <ArrowDownCircle size={32} className="text-slate-400" />
+                </div>
+                <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">No transactions found</p>
+                <p className="text-sm">Try adjusting your filters or add a new transaction.</p>
             </div>
         );
     }

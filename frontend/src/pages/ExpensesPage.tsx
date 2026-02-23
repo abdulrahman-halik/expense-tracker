@@ -8,6 +8,7 @@ import { DeleteConfirmationModal } from '../components/expenses/DeleteConfirmati
 import { Modal } from '../components/ui/Modal';
 import expenseService from '../services/expenseService';
 import type { Transaction, ExpenseFilters, Category } from '../types/expense';
+import { toast } from 'react-hot-toast';
 
 const CATEGORIES: Category[] = [
     'Food', 'Transport', 'Rent', 'Salary', 'Utilities',
@@ -35,6 +36,7 @@ const ExpensesPage = () => {
             setTransactions(response.data);
         } catch (error) {
             console.error('Failed to fetch transactions:', error);
+            toast.error('Failed to load transactions');
         } finally {
             setIsLoading(false);
         }
@@ -56,9 +58,11 @@ const ExpensesPage = () => {
             }
             setIsAddModalOpen(false);
             setEditingTransaction(null);
+            toast.success(editingTransaction ? 'Transaction updated' : 'Transaction added');
             fetchTransactions();
         } catch (error) {
             console.error('Operation failed:', error);
+            toast.error('Operation failed');
         }
     };
 
@@ -67,9 +71,11 @@ const ExpensesPage = () => {
         try {
             await expenseService.deleteExpense(deletingId);
             setDeletingId(null);
+            toast.success('Transaction deleted');
             fetchTransactions();
         } catch (error) {
             console.error('Delete failed:', error);
+            toast.error('Failed to delete transaction');
         }
     };
 
@@ -120,6 +126,71 @@ const ExpensesPage = () => {
                     <option value="income">Income</option>
                     <option value="expense">Expense</option>
                 </select>
+
+                <div className="flex gap-2 md:col-span-2">
+                    <div className="flex-1">
+                        <label className="text-xs font-medium text-slate-500 mb-1 block">Start Date</label>
+                        <Input
+                            type="date"
+                            value={filters.startDate || ''}
+                            onChange={(e) => setFilters(prev => ({ ...prev, startDate: e.target.value || undefined }))}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label className="text-xs font-medium text-slate-500 mb-1 block">End Date</label>
+                        <Input
+                            type="date"
+                            value={filters.endDate || ''}
+                            onChange={(e) => setFilters(prev => ({ ...prev, endDate: e.target.value || undefined }))}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex gap-2">
+                    <div className="flex-[2]">
+                        <label className="text-xs font-medium text-slate-500 mb-1 block">Sort By</label>
+                        <select
+                            className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-800 dark:bg-slate-950"
+                            value={filters.sortBy || 'date'}
+                            onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+                        >
+                            <option value="date">Date</option>
+                            <option value="amount">Amount</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+                    <div className="flex-1">
+                        <label className="text-xs font-medium text-slate-500 mb-1 block">Order</label>
+                        <select
+                            className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-800 dark:bg-slate-950"
+                            value={filters.sortOrder || 'desc'}
+                            onChange={(e) => setFilters(prev => ({ ...prev, sortOrder: e.target.value as any }))}
+                        >
+                            <option value="desc">Desc</option>
+                            <option value="asc">Asc</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-end">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFilters({
+                        search: '',
+                        category: undefined,
+                        type: undefined,
+                        startDate: undefined,
+                        endDate: undefined,
+                        sortBy: 'date',
+                        sortOrder: 'desc',
+                        page: 1,
+                        limit: 10
+                    })}
+                >
+                    Clear Filters
+                </Button>
             </div>
 
             {/* Transactions Table */}
