@@ -3,16 +3,18 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IUser extends Document {
     name: string;
     email: string;
-    password?: string;
+    password: string;
     createdAt: Date;
 }
 
-const UserSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String }, // Optional for now, will be required when auth is added
-}, {
-    timestamps: true
-});
+const UserSchema: Schema = new Schema(
+    {
+        name: { type: String, required: true, trim: true },
+        email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+        // select: false keeps password out of normal queries – must be explicitly selected
+        password: { type: String, required: true, select: false },
+    },
+    { timestamps: true }
+);
 
 export default mongoose.model<IUser>('User', UserSchema);
