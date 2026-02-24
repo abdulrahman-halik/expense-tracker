@@ -25,8 +25,8 @@ export const CategoryPieChart = ({ data }: { data: CategoryData[] }) => {
                     No expenses to show yet
                 </div>
             ) : (
-                <div className="flex-1 w-full flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
+                <div className="flex-1 w-full flex items-center justify-center min-h-0">
+                    <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
                             <Pie
                                 data={data}
@@ -67,8 +67,8 @@ export const SpendingTrendChart = ({ data }: { data: TrendData[] }) => {
                     No transactions in the last 6 months
                 </div>
             ) : (
-                <div className="flex-1 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
+                <div className="flex-1 w-full min-h-0">
+                    <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={data}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                             <XAxis
