@@ -13,3 +13,5 @@ export interface AuthResponse {
 export type LoginData = Pick<User, 'email'> & { password: string };
 
 export type RegisterData = Pick<User, 'name' | 'email'> & { password: string };
+
+export type UpdateProfileData = Partial<Pick<User, 'name' | 'email'>>;

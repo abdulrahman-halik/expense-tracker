@@ -53,7 +53,8 @@ const ExpensesPage = () => {
     const handleAddTransaction = async (data: TransactionFormData) => {
         try {
             if (editingTransaction) {
-                await expenseService.updateExpense(editingTransaction.id, data);
+                const txId = editingTransaction.id || editingTransaction._id;
+                await expenseService.updateExpense(txId as string, data);
             } else {
                 await expenseService.addExpense(data);
             }

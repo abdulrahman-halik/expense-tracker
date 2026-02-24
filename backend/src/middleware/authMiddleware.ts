@@ -15,11 +15,6 @@ interface JwtPayload {
     id: string;
 }
 
-/**
- * protect – JWT authentication middleware.
- * Reads the Bearer token from the Authorization header,
- * verifies it, and attaches the authenticated user to req.user.
- */
 export const protect = async (
     req: AuthRequest,
     res: Response,

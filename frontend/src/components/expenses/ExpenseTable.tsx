@@ -55,7 +55,7 @@ export const ExpenseTable = ({ transactions, onEdit, onDelete, isLoading }: Expe
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
                     {transactions.map((t) => (
-                        <tr key={t.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                        <tr key={t.id || t._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                             <td className="px-6 py-4">
                                 <div className="flex items-center gap-3">
                                     <div className={cn(
@@ -91,7 +91,7 @@ export const ExpenseTable = ({ transactions, onEdit, onDelete, isLoading }: Expe
                                     <Button variant="ghost" size="sm" onClick={() => onEdit(t)}>
                                         <Edit2 size={16} />
                                     </Button>
-                                    <Button variant="ghost" size="sm" onClick={() => onDelete(t.id)} className="text-red-500 hover:text-red-600 dark:hover:text-red-400">
+                                    <Button variant="ghost" size="sm" onClick={() => onDelete((t.id || t._id) as string)} className="text-red-500 hover:text-red-600 dark:hover:text-red-400">
                                         <Trash2 size={16} />
                                     </Button>
                                 </div>

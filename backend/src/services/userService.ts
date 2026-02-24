@@ -1,24 +1,13 @@
 import User, { IUser } from '../models/User';
 
-/**
- * Find a user by their email address.
- * Explicitly selects the password field because it is excluded by default (select: false).
- */
 export const findUserByEmail = async (email: string): Promise<IUser | null> => {
     return User.findOne({ email: email.toLowerCase().trim() }).select('+password');
 };
 
-/**
- * Find a user by their MongoDB ObjectId.
- */
 export const findUserById = async (id: string): Promise<IUser | null> => {
     return User.findById(id).select('-password');
 };
 
-/**
- * Create a new user document in the database.
- * Note: password should already be hashed before calling this function.
- */
 export const createUser = async (
     name: string,
     email: string,
@@ -30,4 +19,15 @@ export const createUser = async (
         password: hashedPassword,
     });
     return user;
+};
+
+export const updateUserById = async (
+    id: string,
+    updates: { name?: string; email?: string }
+): Promise<IUser | null> => {
+    const updateData: any = {};
+    if (updates.name) updateData.name = updates.name.trim();
+    if (updates.email) updateData.email = updates.email.toLowerCase().trim();
+
+    return User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true }).select('-password');
 };
