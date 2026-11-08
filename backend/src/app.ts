@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes';
 import expenseRoutes from './routes/expenseRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
@@ -31,6 +32,15 @@ const authLimiter = rateLimit({
 // Public Routes
 app.get('/', (_req: Request, res: Response) => {
     res.json({ success: true, message: 'Expense Tracker API is running...' });
+});
+
+app.get('/health', (_req: Request, res: Response) => {
+    const isDbConnected = mongoose.connection.readyState === 1;
+    res.status(isDbConnected ? 200 : 503).json({
+        status: isDbConnected ? 'UP' : 'DOWN',
+        database: isDbConnected ? 'connected' : 'disconnected',
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Auth routes
