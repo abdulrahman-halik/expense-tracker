@@ -49,8 +49,8 @@ export const errorHandler = (
         message = 'Token has expired';
     }
 
-    // Log stack in development
-    if (process.env.NODE_ENV !== 'production') {
+    // Log stack in development (skip in production and test runs)
+    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
         console.error('[Error]', err.stack ?? err.message);
     }
 
