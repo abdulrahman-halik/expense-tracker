@@ -29,5 +29,5 @@ export const updateUserById = async (
     if (updates.name) updateData.name = updates.name.trim();
     if (updates.email) updateData.email = updates.email.toLowerCase().trim();
 
-    return User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true }).select('-password');
+    return User.findByIdAndUpdate(id, updateData, { returnDocument: 'after', runValidators: true }).select('-password');
 };

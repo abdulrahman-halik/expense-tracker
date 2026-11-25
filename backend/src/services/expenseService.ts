@@ -114,7 +114,7 @@ export const updateExpenseById = async (
   return Expense.findByIdAndUpdate(
     id,
     { $set: updateFields },
-    { new: true, runValidators: true },
+    { returnDocument: 'after', runValidators: true },
   );
 };
 

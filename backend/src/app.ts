@@ -9,7 +9,7 @@ import expenseRoutes from './routes/expenseRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
 import { protect } from './middleware/authMiddleware';
 
-dotenv.config();
+dotenv.config({ quiet: process.env.NODE_ENV === 'test' });
 
 const app = express();
 
