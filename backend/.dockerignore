@@ -9,5 +9,3 @@ jest.config.js
 .gitignore
 npm-debug.log
 .DS_Store
-Dockerfile
-dockerfile
